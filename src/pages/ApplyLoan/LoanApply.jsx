@@ -1,0 +1,721 @@
+import {
+    CreditCard as CreditCardIcon,
+    Description as FileTextIcon,
+    Email as MailIcon,
+    Place as MapPinIcon,
+    Phone as PhoneIcon,
+    Person as UserIcon,
+    People as UsersIcon
+} from '@mui/icons-material';
+import {
+    Box,
+    Button,
+    Card,
+    CardContent,
+    CardHeader,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    FormControl,
+    InputAdornment,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField,
+    Typography,
+    useTheme
+} from '@mui/material';
+import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import * as yup from "yup";
+
+const loanCategory = {
+  wedding: {
+    name: 'Wedding Loans',
+    subcategories: ['Valima', 'Furniture', 'Valima Food', 'Jahez'],
+    maxAmount: 500000,
+    period: 3
+  },
+  home: {
+    name: 'Home Construction',
+    subcategories: ['Structure', 'Finishing', 'Loan'],
+    maxAmount: 1000000,
+    period: 5
+  },
+  business: {
+    name: 'Business Startup',
+    subcategories: ['Buy Stall', 'Advance Rent for Shop', 'Shop Assets', 'Shop Machinery'],
+    maxAmount: 1000000,
+    period: 5
+  },
+  education: {
+    name: 'Education Loans',
+    subcategories: ['University Fees', 'Child Fees Loan'],
+    maxAmount: 0,
+    period: 4
+  }
+};
+
+const loanCategories = {
+  wedding: {
+    name: 'Wedding Loans',
+    subcategories: ['Valima', 'Furniture', 'Valima Food', 'Jahez'],
+    maxAmount: 500000,
+    period: 3
+  },
+  home: {
+    name: 'Home Construction',
+    subcategories: ['Structure', 'Finishing', 'Loan'],
+    maxAmount: 1000000,
+    period: 5
+  },
+  business: {
+    name: 'Business Startup',
+    subcategories: ['Buy Stall', 'Advance Rent for Shop', 'Shop Assets', 'Shop Machinery'],
+    maxAmount: 1000000,
+    period: 5
+  },
+  education: {
+    name: 'Education Loans',
+    subcategories: ['University Fees', 'Child Fees Loan'],
+    maxAmount: 0,
+    period: 4
+  }
+};
+
+const formSchema = yup.object({
+  name: yup.string().min(2, 'Name must be at least 2 characters'),
+  cnic: yup.string().matches(/^\d{5}-\d{7}-\d{1}$/, 'CNIC format: 12345-1234567-1'),
+  email: yup.string().email('Invalid email address'),
+  phone: yup.string().min(11, 'Phone number must be at least 11 digits'),
+  address: yup.string().min(10, 'Address must be at least 10 characters'),
+  city: yup.string().min(2, 'City is required'),
+  loanCategory: yup.string().required('Please select a loan category'),
+  loanSubcategory: yup.string().required('Please select a subcategory'),
+  loanAmount: yup.string().required('Loan amount is required'),
+  initialDeposit: yup.string().optional(),
+  loanPeriod: yup.string().required('Loan period is required'),
+  guarantor1Name: yup.string().min(2, 'Guarantor name is required'),
+  guarantor1Email: yup.string().email('Invalid email address'),
+  guarantor1Cnic: yup.string().matches(/^\d{5}-\d{7}-\d{1}$/, 'CNIC format: 12345-1234567-1'),
+  guarantor1Location: yup.string().min(5, 'Location is required'),
+  guarantor2Name: yup.string().min(2, 'Guarantor name is required'),
+  guarantor2Email: yup.string().email('Invalid email address'),
+  guarantor2Cnic: yup.string().matches(/^\d{5}-\d{7}-\d{1}$/, 'CNIC format: 12345-1234567-1'),
+  guarantor2Location: yup.string().min(5, 'Location is required'),
+  monthlyIncome: yup.string().required('Monthly income is required'),
+  employmentStatus: yup.string().required('Employment status is required'),
+  purpose: yup.string().min(10, 'Purpose must be at least 10 characters'),
+});
+
+ const LoanApply = () => {
+  const theme = useTheme();
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const { control, handleSubmit, formState: { errors }, setValue, reset } = useForm({
+    defaultValues: {
+      name: '',
+      cnic: '',
+      email: '',
+      phone: '',
+      address: '',
+      city: '',
+      loanCategory: '',
+      loanSubcategory: '',
+      loanAmount: '',
+      initialDeposit: '',
+      loanPeriod: '',
+      guarantor1Name: '',
+      guarantor1Email: '',
+      guarantor1Cnic: '',
+      guarantor1Location: '',
+      guarantor2Name: '',
+      guarantor2Email: '',
+      guarantor2Cnic: '',
+      guarantor2Location: '',
+      monthlyIncome: '',
+      employmentStatus: '',
+      purpose: '',
+    }
+  });
+
+  const onSubmit = async (data) => {
+    setIsSubmitting(true);
+    setTimeout(() => {
+      toast.success("Application Submitted Successfully!");
+      setIsSubmitting(false);
+      reset();
+      setOpenDialog(true);
+    }, 2000);
+  };
+
+  const handleCategoryChange = (category) => {
+    setSelectedCategory(category);
+    setValue('loanCategory', category);
+    setValue('loanSubcategory', '');
+    
+    if (category && loanCategory[category]) {
+      const categoryData = loanCategory[category];
+      setValue('loanPeriod', categoryData.period.toString());
+    }
+  };
+
+  return (
+    <Box sx={{ 
+      minHeight: '100vh', 
+      backgroundColor: theme.palette.background.default,
+      py: 8
+    }}>
+      <Box sx={{ 
+        maxWidth: 'lg', 
+        mx: 'auto', 
+        px: 4 
+      }}>
+        <Box sx={{ textAlign: 'center', mb: 6 }}>
+          <Typography variant="h3" sx={{ 
+            fontWeight: 'bold', 
+            mb: 2,
+            color: theme.palette.text.primary
+          }}>
+            Qarze Hasana Loan Application
+          </Typography>
+          <Typography variant="subtitle1" sx={{ 
+            color: theme.palette.text.secondary
+          }}>
+            Apply for interest-free Islamic financing. Fill out the form below to get started.
+          </Typography>
+        </Box>
+
+        <Card sx={{ 
+          backgroundColor: theme.palette.background.paper,
+          border: `1px solid ${theme.palette.divider}`,
+          mb: 4
+        }}>
+          <CardHeader
+            title={
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <FileTextIcon color="primary" />
+                <Typography variant="h5" component="div">
+                  Loan Application Form
+                </Typography>
+              </Box>
+            }
+            subheader="Please provide accurate information. All fields marked with * are required."
+          />
+          <CardContent>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              {/* Personal Information */}
+              <Box sx={{ mb: 4 }}>
+                <Box sx={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: 1, 
+                  mb: 3,
+                  pb: 1,
+                  borderBottom: `1px solid ${theme.palette.divider}`
+                }}>
+                  <UserIcon color="primary" />
+                  <Typography variant="h6">Personal Information</Typography>
+                </Box>
+                
+                <Box sx={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, 
+                  gap: 3 
+                }}>
+                  <Controller
+                    name="name"
+                    control={control}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        label="Full Name *"
+                        fullWidth
+                        error={!!errors.name}
+                        helperText={errors.name?.message}
+                      />
+                    )}
+                  />
+                  
+                  <Controller
+                    name="cnic"
+                    control={control}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        label="CNIC *"
+                        fullWidth
+                        placeholder="12345-1234567-1"
+                        error={!!errors.cnic}
+                        helperText={errors.cnic?.message}
+                      />
+                    )}
+                  />
+                  
+                  <Controller
+                    name="email"
+                    control={control}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        label="Email Address *"
+                        fullWidth
+                        type="email"
+                        error={!!errors.email}
+                        helperText={errors.email?.message}
+                      />
+                    )}
+                  />
+                  
+                  <Controller
+                    name="phone"
+                    control={control}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        label="Phone Number *"
+                        fullWidth
+                        error={!!errors.phone}
+                        helperText={errors.phone?.message}
+                      />
+                    )}
+                  />
+                  
+                  <Controller
+                    name="address"
+                    control={control}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        label="Address *"
+                        fullWidth
+                        multiline
+                        rows={2}
+                        error={!!errors.address}
+                        helperText={errors.address?.message}
+                        sx={{ gridColumn: { xs: '1', md: '1 / span 2' } }}
+                      />
+                    )}
+                  />
+                  
+                  <Controller
+                    name="city"
+                    control={control}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        label="City *"
+                        fullWidth
+                        error={!!errors.city}
+                        helperText={errors.city?.message}
+                      />
+                    )}
+                  />
+                </Box>
+              </Box>
+
+              {/* Loan Information */}
+              <Box sx={{ mb: 4 }}>
+                <Box sx={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: 1, 
+                  mb: 3,
+                  pb: 1,
+                  borderBottom: `1px solid ${theme.palette.divider}`
+                }}>
+                  <CreditCardIcon color="primary" />
+                  <Typography variant="h6">Loan Information</Typography>
+                </Box>
+                
+                <Box sx={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, 
+                  gap: 3 
+                }}>
+                  <Controller
+                    name="loanCategory"
+                    control={control}
+                    render={({ field }) => (
+                      <FormControl fullWidth error={!!errors.loanCategory}>
+                        <InputLabel>Loan Category *</InputLabel>
+                        <Select
+                          {...field}
+                          label="Loan Category *"
+                          onChange={(e) => handleCategoryChange(e.target.value)}
+                        >
+                          {Object.entries(loanCategory).map(([key, category]) => (
+                            <MenuItem key={key} value={key}>
+                              {category.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        {errors.loanCategory && (
+                          <Typography variant="caption" color="error">
+                            {errors.loanCategory.message}
+                          </Typography>
+                        )}
+                      </FormControl>
+                    )}
+                  />
+                  
+                  <Controller
+                    name="loanSubcategory"
+                    control={control}
+                    render={({ field }) => (
+                      <FormControl fullWidth error={!!errors.loanSubcategory}>
+                        <InputLabel>Subcategory *</InputLabel>
+                        <Select
+                          {...field}
+                          label="Subcategory *"
+                          disabled={!selectedCategory}
+                        >
+                          {selectedCategory && loanCategory[selectedCategory]?.subcategories.map((sub) => (
+                            <MenuItem key={sub} value={sub}>
+                              {sub}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        {errors.loanSubcategory && (
+                          <Typography variant="caption" color="error">
+                            {errors.loanSubcategory.message}
+                          </Typography>
+                        )}
+                      </FormControl>
+                    )}
+                  />
+                  
+                  <Controller
+                    name="loanAmount"
+                    control={control}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        label="Loan Amount (PKR) *"
+                        fullWidth
+                        type="number"
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">PKR</InputAdornment>,
+                        }}
+                        error={!!errors.loanAmount}
+                        helperText={errors.loanAmount?.message}
+                      />
+                    )}
+                  />
+                  
+                  <Controller
+                    name="initialDeposit"
+                    control={control}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        label="Initial Deposit (PKR)"
+                        fullWidth
+                        type="number"
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">PKR</InputAdornment>,
+                        }}
+                        error={!!errors.initialDeposit}
+                        helperText={errors.initialDeposit?.message}
+                      />
+                    )}
+                  />
+                  
+                  <Controller
+                    name="loanPeriod"
+                    control={control}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        label="Loan Period (Years) *"
+                        fullWidth
+                        type="number"
+                        error={!!errors.loanPeriod}
+                        helperText={errors.loanPeriod?.message}
+                      />
+                    )}
+                  />
+                  
+                  <Controller
+                    name="monthlyIncome"
+                    control={control}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        label="Monthly Income (PKR) *"
+                        fullWidth
+                        type="number"
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">PKR</InputAdornment>,
+                        }}
+                        error={!!errors.monthlyIncome}
+                        helperText={errors.monthlyIncome?.message}
+                      />
+                    )}
+                  />
+                  
+                  <Controller
+                    name="employmentStatus"
+                    control={control}
+                    render={({ field }) => (
+                      <FormControl fullWidth error={!!errors.employmentStatus}>
+                        <InputLabel>Employment Status *</InputLabel>
+                        <Select {...field} label="Employment Status *">
+                          <MenuItem value="employed">Employed</MenuItem>
+                          <MenuItem value="self-employed">Self Employed</MenuItem>
+                          <MenuItem value="business">Business Owner</MenuItem>
+                          <MenuItem value="retired">Retired</MenuItem>
+                          <MenuItem value="unemployed">Unemployed</MenuItem>
+                        </Select>
+                        {errors.employmentStatus && (
+                          <Typography variant="caption" color="error">
+                            {errors.employmentStatus.message}
+                          </Typography>
+                        )}
+                      </FormControl>
+                    )}
+                  />
+                  
+                  <Controller
+                    name="purpose"
+                    control={control}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        label="Purpose of Loan *"
+                        fullWidth
+                        multiline
+                        rows={3}
+                        error={!!errors.purpose}
+                        helperText={errors.purpose?.message}
+                        sx={{ gridColumn: { xs: '1', md: '1 / span 2' } }}
+                      />
+                    )}
+                  />
+                </Box>
+              </Box>
+
+              {/* Guarantors Information */}
+              <Box sx={{ mb: 4 }}>
+                <Box sx={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: 1, 
+                  mb: 3,
+                  pb: 1,
+                  borderBottom: `1px solid ${theme.palette.divider}`
+                }}>
+                  <UsersIcon color="primary" />
+                  <Typography variant="h6">Guarantor Information</Typography>
+                </Box>
+                
+                {/* Guarantor 1 */}
+                <Box sx={{ mb: 4 }}>
+                  <Typography variant="subtitle1" sx={{ mb: 2 }}>Guarantor 1</Typography>
+                  <Box sx={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, 
+                    gap: 3 
+                  }}>
+                    <Controller
+                      name="guarantor1Name"
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          label="Name *"
+                          fullWidth
+                          error={!!errors.guarantor1Name}
+                          helperText={errors.guarantor1Name?.message}
+                        />
+                      )}
+                    />
+                    
+                    <Controller
+                      name="guarantor1Email"
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          label="Email *"
+                          fullWidth
+                          type="email"
+                          error={!!errors.guarantor1Email}
+                          helperText={errors.guarantor1Email?.message}
+                        />
+                      )}
+                    />
+                    
+                    <Controller
+                      name="guarantor1Cnic"
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          label="CNIC *"
+                          fullWidth
+                          error={!!errors.guarantor1Cnic}
+                          helperText={errors.guarantor1Cnic?.message}
+                        />
+                      )}
+                    />
+                    
+                    <Controller
+                      name="guarantor1Location"
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          label="Location *"
+                          fullWidth
+                          error={!!errors.guarantor1Location}
+                          helperText={errors.guarantor1Location?.message}
+                        />
+                      )}
+                    />
+                  </Box>
+                </Box>
+                
+                {/* Guarantor 2 */}
+                <Box>
+                  <Typography variant="subtitle1" sx={{ mb: 2 }}>Guarantor 2</Typography>
+                  <Box sx={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, 
+                    gap: 3 
+                  }}>
+                    <Controller
+                      name="guarantor2Name"
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          label="Name *"
+                          fullWidth
+                          error={!!errors.guarantor2Name}
+                          helperText={errors.guarantor2Name?.message}
+                        />
+                      )}
+                    />
+                    
+                    <Controller
+                      name="guarantor2Email"
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          label="Email *"
+                          fullWidth
+                          type="email"
+                          error={!!errors.guarantor2Email}
+                          helperText={errors.guarantor2Email?.message}
+                        />
+                      )}
+                    />
+                    
+                    <Controller
+                      name="guarantor2Cnic"
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          label="CNIC *"
+                          fullWidth
+                          error={!!errors.guarantor2Cnic}
+                          helperText={errors.guarantor2Cnic?.message}
+                        />
+                      )}
+                    />
+                    
+                    <Controller
+                      name="guarantor2Location"
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          label="Location *"
+                          fullWidth
+                          error={!!errors.guarantor2Location}
+                          helperText={errors.guarantor2Location?.message}
+                        />
+                      )}
+                    />
+                  </Box>
+                </Box>
+              </Box>
+
+              <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+                <Button 
+                  type="submit" 
+                  variant="contained" 
+                  size="large"
+                  disabled={isSubmitting}
+                  sx={{ minWidth: 200 }}
+                >
+                  {isSubmitting ? "Submitting..." : "Submit Application"}
+                </Button>
+              </Box>
+            </form>
+          </CardContent>
+        </Card>
+
+        {/* Contact Information */}
+        <Card sx={{ 
+          backgroundColor: theme.palette.background.paper,
+          border: `1px solid ${theme.palette.divider}`
+        }}>
+          <CardHeader
+            title={
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <MailIcon color="primary" />
+                <Typography variant="h6">Need Help?</Typography>
+              </Box>
+            }
+          />
+          <CardContent>
+            <Box sx={{ 
+              display: 'grid', 
+              gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' }, 
+              gap: 3,
+              textAlign: 'center'
+            }}>
+              <Box>
+                <PhoneIcon color="primary" sx={{ fontSize: 32, mb: 1 }} />
+                <Typography variant="subtitle1" sx={{ fontWeight: 'medium' }}>Phone</Typography>
+                <Typography color="text.secondary">+92 21 111 729 526</Typography>
+              </Box>
+              <Box>
+                <MailIcon color="primary" sx={{ fontSize: 32, mb: 1 }} />
+                <Typography variant="subtitle1" sx={{ fontWeight: 'medium' }}>Email</Typography>
+                <Typography color="text.secondary">info@saylani.org</Typography>
+              </Box>
+              <Box>
+                <MapPinIcon color="primary" sx={{ fontSize: 32, mb: 1 }} />
+                <Typography variant="subtitle1" sx={{ fontWeight: 'medium' }}>Office</Typography>
+                <Typography color="text.secondary">Saylani House, Karachi</Typography>
+              </Box>
+            </Box>
+          </CardContent>
+        </Card>
+      </Box>
+
+      {/* Success Dialog */}
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+        <DialogTitle>Application Submitted Successfully!</DialogTitle>
+        <DialogContent>
+          <Typography>
+            You will receive an email with your login credentials and appointment details.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDialog(false)}>Close</Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
+  );
+};
+
+export default LoanApply
