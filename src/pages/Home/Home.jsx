@@ -36,8 +36,11 @@ import LoanCalculation from "../../component/LoanCalculation";
 import Footer from "../../component/Footer";
 
 const Home = () => {
+
+  
+  
   return (
-    <>
+   <>
 
       <Box >
 

@@ -19,7 +19,7 @@ const Footer = () => {
           }}>
             Q
           </Box>
-          <Typography sx={{color:"#fff",fontSize:"2vmin", textAlign:"center",fontWeight:"700",fontSize:"3vmin"}} >
+          <Typography sx={{color:"#fff", textAlign:"center",fontWeight:"700",fontSize:"3vmin"}} >
             Qarze Hasana Hub
           </Typography>
         </Box>

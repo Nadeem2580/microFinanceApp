@@ -1,61 +1,35 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
-    CreditCard as CreditCardIcon,
-    Description as FileTextIcon,
-    Email as MailIcon,
-    Place as MapPinIcon,
-    Phone as PhoneIcon,
-    Person as UserIcon,
-    People as UsersIcon
+  CreditCard as CreditCardIcon,
+  Description as FileTextIcon,
+  Email as MailIcon,
+  Place as MapPinIcon,
+  Phone as PhoneIcon,
+  Person as UserIcon,
+  People as UsersIcon
 } from '@mui/icons-material';
 import {
-    Box,
-    Button,
-    Card,
-    CardContent,
-    CardHeader,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    FormControl,
-    InputAdornment,
-    InputLabel,
-    MenuItem,
-    Select,
-    TextField,
-    Typography,
-    useTheme
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+  useTheme
 } from '@mui/material';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from "yup";
-
-const loanCategory = {
-  wedding: {
-    name: 'Wedding Loans',
-    subcategories: ['Valima', 'Furniture', 'Valima Food', 'Jahez'],
-    maxAmount: 500000,
-    period: 3
-  },
-  home: {
-    name: 'Home Construction',
-    subcategories: ['Structure', 'Finishing', 'Loan'],
-    maxAmount: 1000000,
-    period: 5
-  },
-  business: {
-    name: 'Business Startup',
-    subcategories: ['Buy Stall', 'Advance Rent for Shop', 'Shop Assets', 'Shop Machinery'],
-    maxAmount: 1000000,
-    period: 5
-  },
-  education: {
-    name: 'Education Loans',
-    subcategories: ['University Fees', 'Child Fees Loan'],
-    maxAmount: 0,
-    period: 4
-  }
-};
 
 const loanCategories = {
   wedding: {
@@ -85,111 +59,119 @@ const loanCategories = {
 };
 
 const formSchema = yup.object({
-  name: yup.string().min(2, 'Name must be at least 2 characters'),
-  cnic: yup.string().matches(/^\d{5}-\d{7}-\d{1}$/, 'CNIC format: 12345-1234567-1'),
-  email: yup.string().email('Invalid email address'),
-  phone: yup.string().min(11, 'Phone number must be at least 11 digits'),
-  address: yup.string().min(10, 'Address must be at least 10 characters'),
-  city: yup.string().min(2, 'City is required'),
-  loanCategory: yup.string().required('Please select a loan category'),
-  loanSubcategory: yup.string().required('Please select a subcategory'),
-  loanAmount: yup.string().required('Loan amount is required'),
-  initialDeposit: yup.string().optional(),
-  loanPeriod: yup.string().required('Loan period is required'),
-  guarantor1Name: yup.string().min(2, 'Guarantor name is required'),
-  guarantor1Email: yup.string().email('Invalid email address'),
-  guarantor1Cnic: yup.string().matches(/^\d{5}-\d{7}-\d{1}$/, 'CNIC format: 12345-1234567-1'),
-  guarantor1Location: yup.string().min(5, 'Location is required'),
-  guarantor2Name: yup.string().min(2, 'Guarantor name is required'),
-  guarantor2Email: yup.string().email('Invalid email address'),
-  guarantor2Cnic: yup.string().matches(/^\d{5}-\d{7}-\d{1}$/, 'CNIC format: 12345-1234567-1'),
-  guarantor2Location: yup.string().min(5, 'Location is required'),
-  monthlyIncome: yup.string().required('Monthly income is required'),
-  employmentStatus: yup.string().required('Employment status is required'),
-  purpose: yup.string().min(10, 'Purpose must be at least 10 characters'),
+  fullName: yup.string().required("Full name is required"),
+  email: yup.string().email("Invalid email").required("Email is required"),
+  cnic: yup.string().required("CNIC is required"),
+  phoneNumber: yup.string().required("Phone number is required"),
+  address: yup.string().required("Address is required"),
+  city: yup.string().required("City is required"),
+  loanCategory: yup.string().required("Loan category is required"),
+  loanSubCategory: yup.string().required("Loan subcategory is required"),
+  loanAmount: yup.number().positive("Amount must be positive").required("Loan amount is required"),
+  initalDeposite: yup.number().min(0, "Deposit can't be negative"),
+  loanPeriod: yup.number().positive("Period must be positive").required("Loan period is required"),
+  monthlyIncome: yup.number().positive("Income must be positive").required("Monthly income is required"),
+  employmentStatus: yup.string().required("Employment status is required"),
+  purposeOfLoan: yup.string().required("Purpose is required"),
+  guarantor1FullName: yup.string().required("Guarantor 1 name is required"),
+  guarantor1Email: yup.string().email("Invalid email").required("Guarantor 1 email is required"),
+  guarantor1Cnic: yup.string().required("Guarantor 1 CNIC is required"),
+  guarantor1Location: yup.string().required("Guarantor 1 location is required"),
+  guarantor2FullName: yup.string().required("Guarantor 2 name is required"),
+  guarantor2Email: yup.string().email("Invalid email").required("Guarantor 2 email is required"),
+  guarantor2Cnic: yup.string().required("Guarantor 2 CNIC is required"),
+  guarantor2Location: yup.string().required("Guarantor 2 location is required"),
 });
 
- const LoanApply = () => {
+const LoanApply = () => {
   const theme = useTheme();
   const [selectedCategory, setSelectedCategory] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
 
-  const { control, handleSubmit, formState: { errors }, setValue, reset } = useForm({
+  const { control, handleSubmit, formState: { errors }, watch, setValue, reset } = useForm({
+    resolver: yupResolver(formSchema),
     defaultValues: {
-      name: '',
-      cnic: '',
+      fullName: '',
       email: '',
-      phone: '',
+      cnic: '',
+      phoneNumber: '',
       address: '',
       city: '',
       loanCategory: '',
-      loanSubcategory: '',
+      loanSubCategory: '',
       loanAmount: '',
-      initialDeposit: '',
+      initalDeposite: '',
       loanPeriod: '',
-      guarantor1Name: '',
+      monthlyIncome: '',
+      employmentStatus: '',
+      purposeOfLoan: '',
+      guarantor1FullName: '',
       guarantor1Email: '',
       guarantor1Cnic: '',
       guarantor1Location: '',
-      guarantor2Name: '',
+      guarantor2FullName: '',
       guarantor2Email: '',
       guarantor2Cnic: '',
       guarantor2Location: '',
-      monthlyIncome: '',
-      employmentStatus: '',
-      purpose: '',
     }
   });
 
+  const loanCategory = watch('loanCategory');
+
+  useEffect(() => {
+    if (loanCategory) {
+      setSelectedCategory(loanCategory);
+      setValue('loanSubCategory', '');
+      // Set default loan period based on category
+      const period = loanCategories[loanCategory]?.period;
+      if (period) {
+        setValue('loanPeriod', period);
+      }
+    }
+  }, [loanCategory, setValue]);
+
   const onSubmit = async (data) => {
     setIsSubmitting(true);
-    setTimeout(() => {
-      toast.success("Application Submitted Successfully!");
-      setIsSubmitting(false);
-      reset();
+    try {
+      console.log(data);
+      // Here you would typically send data to your API
       setOpenDialog(true);
-    }, 2000);
-  };
-
-  const handleCategoryChange = (category) => {
-    setSelectedCategory(category);
-    setValue('loanCategory', category);
-    setValue('loanSubcategory', '');
-    
-    if (category && loanCategory[category]) {
-      const categoryData = loanCategory[category];
-      setValue('loanPeriod', categoryData.period.toString());
+      reset();
+    } catch (error) {
+      console.error('Submission error:', error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <Box sx={{ 
-      minHeight: '100vh', 
+    <Box sx={{
+      minHeight: '100vh',
       backgroundColor: theme.palette.background.default,
       py: 8
     }}>
-      <Box sx={{ 
-        maxWidth: 'lg', 
-        mx: 'auto', 
-        px: 4 
+      <Box sx={{
+        maxWidth: 'lg',
+        mx: 'auto',
+        px: 4
       }}>
         <Box sx={{ textAlign: 'center', mb: 6 }}>
-          <Typography variant="h3" sx={{ 
-            fontWeight: 'bold', 
+          <Typography variant="h3" sx={{
+            fontWeight: 'bold',
             mb: 2,
             color: theme.palette.text.primary
           }}>
             Qarze Hasana Loan Application
           </Typography>
-          <Typography variant="subtitle1" sx={{ 
+          <Typography variant="subtitle1" sx={{
             color: theme.palette.text.secondary
           }}>
             Apply for interest-free Islamic financing. Fill out the form below to get started.
           </Typography>
         </Box>
 
-        <Card sx={{ 
+        <Card sx={{
           backgroundColor: theme.palette.background.paper,
           border: `1px solid ${theme.palette.divider}`,
           mb: 4
@@ -209,10 +191,10 @@ const formSchema = yup.object({
             <form onSubmit={handleSubmit(onSubmit)}>
               {/* Personal Information */}
               <Box sx={{ mb: 4 }}>
-                <Box sx={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: 1, 
+                <Box sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
                   mb: 3,
                   pb: 1,
                   borderBottom: `1px solid ${theme.palette.divider}`
@@ -220,26 +202,26 @@ const formSchema = yup.object({
                   <UserIcon color="primary" />
                   <Typography variant="h6">Personal Information</Typography>
                 </Box>
-                
-                <Box sx={{ 
-                  display: 'grid', 
-                  gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, 
-                  gap: 3 
+
+                <Box sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                  gap: 3
                 }}>
                   <Controller
-                    name="name"
+                    name="fullName"
                     control={control}
                     render={({ field }) => (
                       <TextField
                         {...field}
                         label="Full Name *"
                         fullWidth
-                        error={!!errors.name}
-                        helperText={errors.name?.message}
+                        error={!!errors.fullName}
+                        helperText={errors.fullName?.message}
                       />
                     )}
                   />
-                  
+
                   <Controller
                     name="cnic"
                     control={control}
@@ -254,7 +236,7 @@ const formSchema = yup.object({
                       />
                     )}
                   />
-                  
+
                   <Controller
                     name="email"
                     control={control}
@@ -269,21 +251,21 @@ const formSchema = yup.object({
                       />
                     )}
                   />
-                  
+
                   <Controller
-                    name="phone"
+                    name="phoneNumber"
                     control={control}
                     render={({ field }) => (
                       <TextField
                         {...field}
                         label="Phone Number *"
                         fullWidth
-                        error={!!errors.phone}
-                        helperText={errors.phone?.message}
+                        error={!!errors.phoneNumber}
+                        helperText={errors.phoneNumber?.message}
                       />
                     )}
                   />
-                  
+
                   <Controller
                     name="address"
                     control={control}
@@ -300,7 +282,7 @@ const formSchema = yup.object({
                       />
                     )}
                   />
-                  
+
                   <Controller
                     name="city"
                     control={control}
@@ -319,10 +301,10 @@ const formSchema = yup.object({
 
               {/* Loan Information */}
               <Box sx={{ mb: 4 }}>
-                <Box sx={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: 1, 
+                <Box sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
                   mb: 3,
                   pb: 1,
                   borderBottom: `1px solid ${theme.palette.divider}`
@@ -330,26 +312,29 @@ const formSchema = yup.object({
                   <CreditCardIcon color="primary" />
                   <Typography variant="h6">Loan Information</Typography>
                 </Box>
-                
-                <Box sx={{ 
-                  display: 'grid', 
-                  gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, 
-                  gap: 3 
+
+                <Box sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                  gap: 3
                 }}>
                   <Controller
                     name="loanCategory"
                     control={control}
                     render={({ field }) => (
                       <FormControl fullWidth error={!!errors.loanCategory}>
-                        <InputLabel>Loan Category *</InputLabel>
+                        <InputLabel>Category *</InputLabel>
                         <Select
                           {...field}
-                          label="Loan Category *"
-                          onChange={(e) => handleCategoryChange(e.target.value)}
+                          label="Category *"
+                          onChange={(e) => {
+                            field.onChange(e);
+                            setSelectedCategory(e.target.value);
+                          }}
                         >
-                          {Object.entries(loanCategory).map(([key, category]) => (
-                            <MenuItem key={key} value={key}>
-                              {category.name}
+                          {Object.keys(loanCategories).map((category) => (
+                            <MenuItem key={category} value={category}>
+                              {loanCategories[category].name}
                             </MenuItem>
                           ))}
                         </Select>
@@ -361,33 +346,33 @@ const formSchema = yup.object({
                       </FormControl>
                     )}
                   />
-                  
+
                   <Controller
-                    name="loanSubcategory"
+                    name="loanSubCategory"
                     control={control}
                     render={({ field }) => (
-                      <FormControl fullWidth error={!!errors.loanSubcategory}>
+                      <FormControl fullWidth error={!!errors.loanSubCategory}>
                         <InputLabel>Subcategory *</InputLabel>
                         <Select
                           {...field}
                           label="Subcategory *"
                           disabled={!selectedCategory}
                         >
-                          {selectedCategory && loanCategory[selectedCategory]?.subcategories.map((sub) => (
+                          {selectedCategory && loanCategories[selectedCategory]?.subcategories.map((sub) => (
                             <MenuItem key={sub} value={sub}>
                               {sub}
                             </MenuItem>
                           ))}
                         </Select>
-                        {errors.loanSubcategory && (
+                        {errors.loanSubCategory && (
                           <Typography variant="caption" color="error">
-                            {errors.loanSubcategory.message}
+                            {errors.loanSubCategory.message}
                           </Typography>
                         )}
                       </FormControl>
                     )}
                   />
-                  
+
                   <Controller
                     name="loanAmount"
                     control={control}
@@ -399,15 +384,19 @@ const formSchema = yup.object({
                         type="number"
                         InputProps={{
                           startAdornment: <InputAdornment position="start">PKR</InputAdornment>,
+                          inputProps: { 
+                            min: 0,
+                            max: selectedCategory ? loanCategories[selectedCategory]?.maxAmount : undefined
+                          }
                         }}
                         error={!!errors.loanAmount}
                         helperText={errors.loanAmount?.message}
                       />
                     )}
                   />
-                  
+
                   <Controller
-                    name="initialDeposit"
+                    name="initalDeposite"
                     control={control}
                     render={({ field }) => (
                       <TextField
@@ -417,13 +406,14 @@ const formSchema = yup.object({
                         type="number"
                         InputProps={{
                           startAdornment: <InputAdornment position="start">PKR</InputAdornment>,
+                          inputProps: { min: 0 }
                         }}
-                        error={!!errors.initialDeposit}
-                        helperText={errors.initialDeposit?.message}
+                        error={!!errors.initalDeposite}
+                        helperText={errors.initalDeposite?.message}
                       />
                     )}
                   />
-                  
+
                   <Controller
                     name="loanPeriod"
                     control={control}
@@ -433,12 +423,15 @@ const formSchema = yup.object({
                         label="Loan Period (Years) *"
                         fullWidth
                         type="number"
+                        InputProps={{
+                          inputProps: { min: 1 }
+                        }}
                         error={!!errors.loanPeriod}
                         helperText={errors.loanPeriod?.message}
                       />
                     )}
                   />
-                  
+
                   <Controller
                     name="monthlyIncome"
                     control={control}
@@ -450,13 +443,14 @@ const formSchema = yup.object({
                         type="number"
                         InputProps={{
                           startAdornment: <InputAdornment position="start">PKR</InputAdornment>,
+                          inputProps: { min: 0 }
                         }}
                         error={!!errors.monthlyIncome}
                         helperText={errors.monthlyIncome?.message}
                       />
                     )}
                   />
-                  
+
                   <Controller
                     name="employmentStatus"
                     control={control}
@@ -478,9 +472,9 @@ const formSchema = yup.object({
                       </FormControl>
                     )}
                   />
-                  
+
                   <Controller
-                    name="purpose"
+                    name="purposeOfLoan"
                     control={control}
                     render={({ field }) => (
                       <TextField
@@ -489,8 +483,8 @@ const formSchema = yup.object({
                         fullWidth
                         multiline
                         rows={3}
-                        error={!!errors.purpose}
-                        helperText={errors.purpose?.message}
+                        error={!!errors.purposeOfLoan}
+                        helperText={errors.purposeOfLoan?.message}
                         sx={{ gridColumn: { xs: '1', md: '1 / span 2' } }}
                       />
                     )}
@@ -500,10 +494,10 @@ const formSchema = yup.object({
 
               {/* Guarantors Information */}
               <Box sx={{ mb: 4 }}>
-                <Box sx={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: 1, 
+                <Box sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
                   mb: 3,
                   pb: 1,
                   borderBottom: `1px solid ${theme.palette.divider}`
@@ -511,29 +505,29 @@ const formSchema = yup.object({
                   <UsersIcon color="primary" />
                   <Typography variant="h6">Guarantor Information</Typography>
                 </Box>
-                
+
                 {/* Guarantor 1 */}
                 <Box sx={{ mb: 4 }}>
                   <Typography variant="subtitle1" sx={{ mb: 2 }}>Guarantor 1</Typography>
-                  <Box sx={{ 
-                    display: 'grid', 
-                    gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, 
-                    gap: 3 
+                  <Box sx={{
+                    display: 'grid',
+                    gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                    gap: 3
                   }}>
                     <Controller
-                      name="guarantor1Name"
+                      name="guarantor1FullName"
                       control={control}
                       render={({ field }) => (
                         <TextField
                           {...field}
                           label="Name *"
                           fullWidth
-                          error={!!errors.guarantor1Name}
-                          helperText={errors.guarantor1Name?.message}
+                          error={!!errors.guarantor1FullName}
+                          helperText={errors.guarantor1FullName?.message}
                         />
                       )}
                     />
-                    
+
                     <Controller
                       name="guarantor1Email"
                       control={control}
@@ -548,7 +542,7 @@ const formSchema = yup.object({
                         />
                       )}
                     />
-                    
+
                     <Controller
                       name="guarantor1Cnic"
                       control={control}
@@ -562,7 +556,7 @@ const formSchema = yup.object({
                         />
                       )}
                     />
-                    
+
                     <Controller
                       name="guarantor1Location"
                       control={control}
@@ -578,29 +572,29 @@ const formSchema = yup.object({
                     />
                   </Box>
                 </Box>
-                
+
                 {/* Guarantor 2 */}
                 <Box>
                   <Typography variant="subtitle1" sx={{ mb: 2 }}>Guarantor 2</Typography>
-                  <Box sx={{ 
-                    display: 'grid', 
-                    gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, 
-                    gap: 3 
+                  <Box sx={{
+                    display: 'grid',
+                    gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                    gap: 3
                   }}>
                     <Controller
-                      name="guarantor2Name"
+                      name="guarantor2FullName"
                       control={control}
                       render={({ field }) => (
                         <TextField
                           {...field}
                           label="Name *"
                           fullWidth
-                          error={!!errors.guarantor2Name}
-                          helperText={errors.guarantor2Name?.message}
+                          error={!!errors.guarantor2FullName}
+                          helperText={errors.guarantor2FullName?.message}
                         />
                       )}
                     />
-                    
+
                     <Controller
                       name="guarantor2Email"
                       control={control}
@@ -615,7 +609,7 @@ const formSchema = yup.object({
                         />
                       )}
                     />
-                    
+
                     <Controller
                       name="guarantor2Cnic"
                       control={control}
@@ -629,7 +623,7 @@ const formSchema = yup.object({
                         />
                       )}
                     />
-                    
+
                     <Controller
                       name="guarantor2Location"
                       control={control}
@@ -648,9 +642,9 @@ const formSchema = yup.object({
               </Box>
 
               <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-                <Button 
-                  type="submit" 
-                  variant="contained" 
+                <Button
+                  type="submit"
+                  variant="contained"
                   size="large"
                   disabled={isSubmitting}
                   sx={{ minWidth: 200 }}
@@ -663,7 +657,7 @@ const formSchema = yup.object({
         </Card>
 
         {/* Contact Information */}
-        <Card sx={{ 
+        <Card sx={{
           backgroundColor: theme.palette.background.paper,
           border: `1px solid ${theme.palette.divider}`
         }}>
@@ -676,9 +670,9 @@ const formSchema = yup.object({
             }
           />
           <CardContent>
-            <Box sx={{ 
-              display: 'grid', 
-              gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' }, 
+            <Box sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' },
               gap: 3,
               textAlign: 'center'
             }}>
@@ -718,4 +712,4 @@ const formSchema = yup.object({
   );
 };
 
-export default LoanApply
+export default LoanApply;

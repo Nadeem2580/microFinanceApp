@@ -98,6 +98,8 @@ const Navbar = () => {
             {!isMobile ? (
               <>
                 <Button
+                    component="a"
+                    href = "/login"
                   sx={{
                     color: "#fff",
                     display: "flex",
@@ -112,8 +114,8 @@ const Navbar = () => {
                   <PersonOutlineIcon fontSize="small" sx={{ mr: 1 }} /> Login
                 </Button>
                 <Button
-                component="a"
-                href='/applying_loan'
+                  component="a"
+                  href='/applying_loan'
                   sx={{
                     backgroundColor: "#1fb857",
                     padding: "8px 20px",

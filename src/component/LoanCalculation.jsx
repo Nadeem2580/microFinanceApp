@@ -525,6 +525,8 @@ const LoanCalculation = () => {
 
                                 {/* Proceed Button */}
                                 <Button
+                                component="a"
+                                href='/applying_loan'
                                     fullWidth
                                     variant="contained"
                                     sx={{
