@@ -23,13 +23,13 @@ const Cards = () => {
   return (
     <>
       <Grid size={{ xs: 12, md: 6 }}
-       sx={{
-        ':hover': {
-          transform: 'scale(1.10)',
-          transition: 'all 0.3s ease-in-out',
-          boxShadow: "0 0px 10px  #21c45d"
-        }
-      }}>
+        sx={{
+          ':hover': {
+            transform: 'scale(1.10)',
+            transition: 'all 0.3s ease-in-out',
+            boxShadow: "0 0px 10px  #21c45d"
+          }
+        }}>
         <Card sx={{
           borderRadius: '16px',
           boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
@@ -140,6 +140,8 @@ const Cards = () => {
             </Box>
 
             <Button
+              component="a"
+              href='#loan_calculation'
               fullWidth
               variant="contained"
               endIcon={<ArrowRightAltIcon />}
@@ -163,7 +165,7 @@ const Cards = () => {
 
       {/* -------------- 2nd card ---------------  */}
 
-      <Grid  size={{ xs: 12, md: 6 }} sx={{
+      <Grid size={{ xs: 12, md: 6 }} sx={{
         ':hover': {
           transform: 'scale(1.10)',
           transition: 'all 0.3s ease-in-out',
@@ -277,6 +279,8 @@ const Cards = () => {
             </Box>
 
             <Button
+              component="a"
+              href='#loan_calculation'
               fullWidth
               variant="contained"
               endIcon={<ArrowRightAltIcon />}
@@ -420,6 +424,8 @@ const Cards = () => {
             </Box>
 
             <Button
+              component="a"
+              href='#loan_calculation'
               fullWidth
               variant="contained"
               endIcon={<ArrowRightAltIcon />}
@@ -444,7 +450,7 @@ const Cards = () => {
 
       {/* -------------- 4th card ---------------  */}
 
-      <Grid  size={{ xs: 12, md: 6 }} sx={{
+      <Grid size={{ xs: 12, md: 6 }} sx={{
         ':hover': {
           transform: 'scale(1.10)',
           transition: 'all 0.3s ease-in-out',
@@ -554,6 +560,8 @@ const Cards = () => {
             </Box>
 
             <Button
+              component="a"
+              href='#loan_calculation'
               fullWidth
               variant="contained"
               endIcon={<ArrowRightAltIcon />}

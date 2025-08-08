@@ -58,7 +58,7 @@ const LoanCalculation = () => {
         const remaining = obj.loanAmount - obj.initialDeposite;
         const months = obj.loanPeriod * 12;
         const balance = remaining / months;
-  
+
 
         setCalculatedLoan({
             category: obj.category,
@@ -68,7 +68,7 @@ const LoanCalculation = () => {
             loanPeriod: obj.loanPeriod,
             Remaining: remaining,
             Balance: balance.toFixed(),
-            Months : months
+            Months: months
         });
 
         setShowResultCard(true);
@@ -85,7 +85,7 @@ const LoanCalculation = () => {
     return (
         <Container id="loan_calculation" maxWidth="lg" sx={{ py: 4, backgroundColor: "#13161d", minHeight: '100vh' }} >
             {/* Header Section */}
-            <Box  sx={{ mb: 6, textAlign: 'center' }
+            <Box sx={{ mb: 6, textAlign: 'center' }
             }>
                 <Typography variant="h3" sx={{ mb: 2, color: 'white' }}>
                     <CalculateIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
@@ -525,8 +525,8 @@ const LoanCalculation = () => {
 
                                 {/* Proceed Button */}
                                 <Button
-                                component="a"
-                                href='/applying_loan'
+                                    component="a"
+                                    href='/applying_loan'
                                     fullWidth
                                     variant="contained"
                                     sx={{

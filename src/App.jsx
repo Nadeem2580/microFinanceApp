@@ -1,24 +1,25 @@
+import Cookies from "js-cookie"
 import { Navigate, Route, Routes } from 'react-router-dom'
+import { Bounce, ToastContainer } from 'react-toastify'
 import './App.css'
-import HomePage from './pages/Home/Home'
-import LoginPage from './pages/Auth/LoginPage'
-import SignUpPage from './pages/Auth/SignUpPage'
+import { useAppContext } from './context/userContext'
 import NotFound404 from './pages/404 page/NotFound'
 import LoanApply from './pages/ApplyLoan/LoanApply'
-import { Bounce, ToastContainer } from 'react-toastify'
-import { useAppContext } from './context/userContext'
-import Cookies from "js-cookie"
+import LoginPage from './pages/Auth/LoginPage'
+import SignUpPage from './pages/Auth/SignUpPage'
+import Contact from './pages/contact/Contact'
+import HomePage from './pages/Home/Home'
+import Navbar from "./component/Navbar"
 function App() {
-  const {navigate}=useAppContext()
   const token = Cookies.get("token")
-  console.log(token, "tokenaa")
   return (
     <>
       <Routes>
         <Route index element={<HomePage />} />
         <Route path='/login' element={<LoginPage />} />
         <Route path='/sign_up' element={<SignUpPage />} />
-          <Route path='/applying_loan' element={token ? <LoanApply /> : <Navigate to="/login" />} />
+        <Route path='/applying_loan' element={token ? <Navbar><LoanApply /></Navbar> : <Navigate to="/login" />} />
+        <Route path='/contact' element={<Navbar><Contact /> </Navbar>} />
         <Route path='*' element={<NotFound404 />} />
 
 

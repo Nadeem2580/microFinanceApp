@@ -1,52 +1,196 @@
-import { Box, Button, IconButton, Typography } from '@mui/material'
-import React from 'react'
-import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
-import GroupsIcon from '@mui/icons-material/Groups';
-import CallMergeIcon from '@mui/icons-material/CallMerge';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { Box, Button, IconButton, Typography } from '@mui/material';
+import {
+  ArrowRightAlt as ArrowRightAltIcon,
+  MenuBook as MenuBookIcon,
+  Groups as GroupsIcon,
+  CallMerge as CallMergeIcon,
+  FavoriteBorder as FavoriteBorderIcon
+} from '@mui/icons-material';
+
+const cardsDetails = [
+  { 
+    image: MenuBookIcon, 
+    status: "100%", 
+    title: "Shariah Compliant" 
+  },
+  { 
+    image: GroupsIcon, 
+    status: "50K", 
+    title: "Families Helped" 
+  },
+  { 
+    image: CallMergeIcon, 
+    status: "Rs15Cr+", 
+    title: "Loans Disbursed" 
+  },
+  { 
+    image: FavoriteBorderIcon, 
+    status: "0%", 
+    title: "Interest Rate" 
+  },
+];
+
 const HeaderSection = () => {
+  return (
+    <Box sx={{ 
+      background: "linear-gradient(to right, #14181f, #14181f, #102614)",
+      minHeight: "92vh",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      flexDirection: "column",marginTop:"50px",
+      padding: { xs: "20px 10px", md: "20px" },
+      textAlign: "center"
+    }}>
+      {/* Main Title */}
+      <Box sx={{ mb: { xs: 1, md: 2 } }}>
+        <Typography sx={{ 
+          fontSize: { 
+            xs: "2.5rem", 
+            sm: "3.5rem", 
+            md: "4.5rem", 
+            lg: "5.5rem" 
+          },
+          color: "#fff",
+          fontWeight: 700,
+          lineHeight: 1.2,
+          whiteSpace: "nowrap"
+        }}>
+          Qarze Hasana
+        </Typography>
+      </Box>
 
+      {/* Subtitle */}
+      <Box sx={{ mb: { xs: 2, md: 3 } }}>
+        <Typography sx={{ 
+          fontSize: { 
+            xs: "2rem", 
+            sm: "3rem", 
+            md: "4rem", 
+            lg: "5rem" 
+          },
+          color: "#1fb857",
+          fontWeight: 700,
+          lineHeight: 1,
+          whiteSpace: "nowrap"
+        }}>
+          Microfinance Hub
+        </Typography>
+      </Box>
 
-    const cardsDetails = [
-        { image: MenuBookIcon, status: "100%", title: "Shariah Compliant" },
-        { image: GroupsIcon, status: "50K", title: "Families Helped" },
-        { image: CallMergeIcon, status: "Rs15Cr+", title: "Loans Disbursed" },
-        { image: FavoriteBorderIcon, status: "0%", title: "Interest Rate" },
-    ]
+      {/* Description */}
+      <Typography sx={{ 
+        fontSize: { 
+          xs: "1rem", 
+          sm: "1.25rem", 
+          md: "1.5rem" 
+        },
+        color: "#98a4b3",
+        maxWidth: { xs: "100%", md: "80%", lg: "60%" },
+        mb: { xs: 3, md: 4 },
+        px: { xs: 1, sm: 0 }
+      }}>
+        Empowering communities through interest-free Islamic financing, building dreams, supporting families, creating opportunities.
+      </Typography>
 
+      {/* Action Buttons */}
+      <Box sx={{ 
+        display: "flex", 
+        flexDirection: { xs: "column", sm: "row" },
+        gap: "20px",
+        mb: { xs: 4, md: 6 },
+        width: "100%",
+        justifyContent: "center",
+        alignItems: "center"
+      }}>
+        <Button 
+          component="a" 
+          href="/applying_loan" 
+          sx={{ 
+            fontSize: { xs: "1rem", sm: "1.1rem", md: "1.25rem" },
+            backgroundColor: "#1fb857",
+            color: "#fff",
+            padding: { xs: "12px 24px", md: "16px 32px" },
+            fontWeight: 500,
+            boxShadow: "0 0 3px #1fb857",
+            borderRadius: "15px",
+            '&:hover': {
+              backgroundColor: "#18a04a"
+            },
+            minWidth: { xs: "200px", sm: "auto" }
+          }}
+        >
+          Apply now <ArrowRightAltIcon sx={{ ml: 1 }} />
+        </Button>
+        
+        <Button 
+          component="a" 
+          href="#loan_calculation" 
+          sx={{ 
+            fontSize: { xs: "1rem", sm: "1.1rem", md: "1.25rem" },
+            border: "3px dashed #172a17",
+            padding: { xs: "12px 24px", md: "16px 32px" },
+            color: "#fff",
+            fontWeight: 500,
+            borderRadius: "15px",
+            '&:hover': { 
+              backgroundColor: "#121b1e" 
+            },
+            minWidth: { xs: "200px", sm: "auto" }
+          }}
+        >
+          Calculate your loan
+        </Button>
+      </Box>
 
-    return (
-
-        <Box sx={{ background: "linear-gradient(to right, #14181f, #14181f, #102614)", minHeight: "92vh", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", padding: "20px" }}>
-
-            <Typography sx={{ fontSize: "9vmin", color: "#fff", fontWeight: "700", lineHeight: "100px" }}>Qarze Hasana</Typography>
-            <Typography sx={{ fontSize: "9vmin", color: "#1fb857", fontWeight: "700", lineHeight: "80px" }}>Microfinance Hub </Typography>
-            <Typography sx={{ fontSize: "3vmin", color: "#98a4b3", maxWidth: { xs: "100%", md: "80%", lg: "60%" }, textAlign: "center" }}>Empowering communities through interest-free Islamic
-                financing. Building dreams, supporting families, creating  opportunities.
+      {/* Stats Cards */}
+      <Box sx={{ 
+        display: "flex",
+        flexWrap: "wrap",
+        gap: "20px",
+        width: "100%",
+        maxWidth: "1200px",
+        justifyContent: "center",
+        px: { xs: 2, sm: 0 }
+      }}>
+        {cardsDetails.map(({ image: Icon, status, title }, index) => (
+          <Box 
+            key={index} 
+            sx={{ 
+              backgroundColor: "#121b1e",
+              border: "3px dashed #172a17",
+              padding: "20px 0",
+              borderRadius: "20px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+              flex: { xs: "1 1 40%", sm: "1 1 22%" },
+              minWidth: { xs: "160px", sm: "180px" },
+              maxWidth: { xs: "none", md: "240px" }
+            }}
+          >
+            <IconButton sx={{ color: "#1fb857" }}>
+              <Icon fontSize="large" />
+            </IconButton>
+            <Typography variant='h6' sx={{ 
+              color: "#fff", 
+              mt: 1,
+              fontSize: { xs: "1.25rem", sm: "1.5rem" }
+            }}>
+              {status}
             </Typography>
+            <Typography variant='caption' sx={{ 
+              color: "#98a4b3",
+              fontSize: { xs: "0.8rem", sm: "0.9rem" }
+            }}>
+              {title}
+            </Typography>
+          </Box>
+        ))}
+      </Box>
+    </Box>
+  );
+};
 
-            <Box sx={{ display: "flex", marginTop: "30px" }}>
-                <Button component="a" href="/applying_loan" sx={{ fontSize: "20px", backgroundColor: "#1fb857", color: "#fff", padding: "20px 40px", fontWeight: "500", boxShadow: "0 0 3px #1fb857", marginRight: "20px", borderRadius: "15px" }}>Apply now <ArrowRightAltIcon /></Button>
-                <Button  component="a" href="#loan_calculation" sx={{ ":hover": { backgroundColor: "#121b1e" }, fontSize: "20px", border: "3px dashed #172a17", padding: "20px 30px", color: "#fff", fontWeight: "500", borderRadius: "15px" }}>Calculate your loan</Button>
-            </Box>
-
-            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexWrap: "wrap", gap: "20px", marginTop: "100px" }} >
-
-                {
-                    cardsDetails.map((values, index) => (
-                        <Box key={index} sx={{ backgroundColor: "#121b1e", border: "3px dashed  #172a17", minWidth: "230px", padding: "30px 0", borderRadius: "20px", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }} >
-                            <IconButton>
-                                <values.image />
-                            </IconButton>
-                            <Typography variant='h6'>{values.status}</Typography>
-                            <Typography variant='caption'>{values.title}</Typography>
-                        </Box>
-                    ))
-                }
-            </Box>
-        </Box>
-    )
-}
-
-export default HeaderSection
+export default HeaderSection;

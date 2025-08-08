@@ -27,9 +27,14 @@ import {
   Typography,
   useTheme
 } from '@mui/material';
+import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from "yup";
+import BASE_URL from '../../utils/utils';
+import Cookies from "js-cookie"
+import LoanDetailsModal from '../../component/Modal';
+
 
 const loanCategories = {
   wedding: {
@@ -116,27 +121,29 @@ const LoanApply = () => {
       guarantor2Location: '',
     }
   });
+  const [open, setOpen] = useState(false)
+  const [data, setData] = useState([])
 
-  const loanCategory = watch('loanCategory');
+  const modal = () => {
+    setOpen(true)
 
-  useEffect(() => {
-    if (loanCategory) {
-      setSelectedCategory(loanCategory);
-      setValue('loanSubCategory', '');
-      // Set default loan period based on category
-      const period = loanCategories[loanCategory]?.period;
-      if (period) {
-        setValue('loanPeriod', period);
-      }
-    }
-  }, [loanCategory, setValue]);
+  }
 
+  const closemodal = () => {
+    setOpen(false)
+
+  }
   const onSubmit = async (data) => {
     setIsSubmitting(true);
     try {
-      console.log(data);
-      // Here you would typically send data to your API
-      setOpenDialog(true);
+      const response = await axios.post(`${BASE_URL}/api/auth/apply-loan`, data, {
+        headers: {
+          Authorization: `Bearer ${Cookies.get("token")}`
+        }
+      })
+      setData(response.data.data)
+      console.log(response.data.data)
+      modal()
       reset();
     } catch (error) {
       console.error('Submission error:', error);
@@ -298,7 +305,6 @@ const LoanApply = () => {
                   />
                 </Box>
               </Box>
-
               {/* Loan Information */}
               <Box sx={{ mb: 4 }}>
                 <Box sx={{
@@ -384,7 +390,7 @@ const LoanApply = () => {
                         type="number"
                         InputProps={{
                           startAdornment: <InputAdornment position="start">PKR</InputAdornment>,
-                          inputProps: { 
+                          inputProps: {
                             min: 0,
                             max: selectedCategory ? loanCategories[selectedCategory]?.maxAmount : undefined
                           }
@@ -657,57 +663,11 @@ const LoanApply = () => {
         </Card>
 
         {/* Contact Information */}
-        <Card sx={{
-          backgroundColor: theme.palette.background.paper,
-          border: `1px solid ${theme.palette.divider}`
-        }}>
-          <CardHeader
-            title={
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <MailIcon color="primary" />
-                <Typography variant="h6">Need Help?</Typography>
-              </Box>
-            }
-          />
-          <CardContent>
-            <Box sx={{
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' },
-              gap: 3,
-              textAlign: 'center'
-            }}>
-              <Box>
-                <PhoneIcon color="primary" sx={{ fontSize: 32, mb: 1 }} />
-                <Typography variant="subtitle1" sx={{ fontWeight: 'medium' }}>Phone</Typography>
-                <Typography color="text.secondary">+92 21 111 729 526</Typography>
-              </Box>
-              <Box>
-                <MailIcon color="primary" sx={{ fontSize: 32, mb: 1 }} />
-                <Typography variant="subtitle1" sx={{ fontWeight: 'medium' }}>Email</Typography>
-                <Typography color="text.secondary">info@saylani.org</Typography>
-              </Box>
-              <Box>
-                <MapPinIcon color="primary" sx={{ fontSize: 32, mb: 1 }} />
-                <Typography variant="subtitle1" sx={{ fontWeight: 'medium' }}>Office</Typography>
-                <Typography color="text.secondary">Saylani House, Karachi</Typography>
-              </Box>
-            </Box>
-          </CardContent>
-        </Card>
+       
       </Box>
 
-      {/* Success Dialog */}
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-        <DialogTitle>Application Submitted Successfully!</DialogTitle>
-        <DialogContent>
-          <Typography>
-            You will receive an email with your login credentials and appointment details.
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenDialog(false)}>Close</Button>
-        </DialogActions>
-      </Dialog>
+
+      <LoanDetailsModal open={open} data={data} onClose={closemodal} />
     </Box>
   );
 };
