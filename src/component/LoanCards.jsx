@@ -5,7 +5,7 @@ import {
   Grid,
   Typography
 } from '@mui/material';
-import Cards from './Cards';
+import Cards from './cards';
 
 
 const LoanCards = () => {
