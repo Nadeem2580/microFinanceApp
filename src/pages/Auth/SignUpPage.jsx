@@ -10,8 +10,8 @@ import { useAppContext } from '../../context/userContext'
 const schema = yup
   .object({
     fullName: yup.string().required('Full name is required'),
-    email: yup.string().required('Email is required').email('Invalid email address'),
-    password: yup.string().required('Password is required'),
+    signUpemail: yup.string().required('Email is required').email('Invalid email address'),
+    signUpPassword: yup.string().required('Password is required'),
     confirmPassword: yup.string().required('Confirm Password is required').oneOf([yup.ref('password'), null], 'Passwords must match'),
 
   })
@@ -24,7 +24,7 @@ const SignUpPage = () => {
     defaultValues: {
       fullName: "",
       email: "",
-      password: "",
+      signUpPassword: "",
       confirmPassword: "",
     }
   })
@@ -94,11 +94,11 @@ const SignUpPage = () => {
             Enter Email
           </Typography>
           <Controller
-            name='email'
+            name='signUpemail'
             control={control}
             render={({ field }) => (
-              <TextField autoComplete="off" fullWidth label="Enter Email" variant="outlined" type='email'  {...field} error={errors.email}
-                helperText={errors.email?.message}
+              <TextField autoComplete="off" fullWidth label="Enter Email" variant="outlined" type='email'  {...field} error={errors.signUpemail}
+                helperText={errors.signUpemail?.message}
                 sx={{
                   marginBottom: '20px',
                   '& .MuiOutlinedInput-root': {
@@ -124,16 +124,16 @@ const SignUpPage = () => {
             )}
           />
 
-          <Typography  variant="subtitle1" sx={{ color: 'white', marginBottom: '8px' }}>
+          <Typography variant="subtitle1" sx={{ color: 'white', marginBottom: '8px' }}>
             Enter Password
           </Typography>
           <Controller
-            name='password'
+            name='signUpPassword'
             control={control}
             render={({ field }) => (
               <TextField  {...field}
-                fullWidth autoComplete="off" label="Enter your Password" variant='outlined' type='password' error={errors.password}
-                helperText={errors.password?.message}
+                fullWidth autoComplete="off" label="Enter your Password" variant='outlined' type='password' error={errors.signUpPassword}
+                helperText={errors.signUpPassword?.message}
                 sx={{
                   marginBottom: "20px",
                   '& .MuiOutlinedInput-root': {
@@ -196,7 +196,7 @@ const SignUpPage = () => {
 
           />
 
-          <Typography variant='caption' sx={{ display: "flex", justifyContent: "end", gap: "5px" }}> Already have an account? <Typography sx={{ textDecoration: "none", color:"blue" }} component={"a"} href='/login' variant='body2'>Log in</Typography> </Typography>
+          <Typography variant='caption' sx={{ display: "flex", justifyContent: "end", gap: "5px" }}> Already have an account? <Typography sx={{ textDecoration: "none", color: "blue" }} component={"a"} href='/login' variant='body2'>Log in</Typography> </Typography>
 
 
           <Button variant='contained' type='submit' sx={{ display: "block", margin: "auto", backgroundColor: "#21c45d", color: "#fff" }} >Log in</Button>
