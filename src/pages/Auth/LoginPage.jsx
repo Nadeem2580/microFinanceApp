@@ -58,7 +58,7 @@ const LoginPage = () => {
             name='email'
             control={control}
             render={({ field }) => (
-              <TextField fullWidth label="Enter Email" variant="outlined" {...field} error={errors.email} helperText={errors?.email?.message}
+              <TextField fullWidth label="Enter Email" autoComplete="off" variant="outlined" {...field} error={errors.email} helperText={errors?.email?.message}
                 sx={{
                   marginBottom: '20px', '& .MuiOutlinedInput-root': {
                     backgroundColor: '#101319',
@@ -91,7 +91,7 @@ const LoginPage = () => {
             control={control}
             render={({ field }) => (
               <TextField {...field}
-                fullWidth label="Enter your Password" variant='outlined' type='password' error={errors.password} helperText={errors?.password?.message}
+                fullWidth label="Enter your Password" variant='outlined' autoComplete="off" type='password' error={errors.password} helperText={errors?.password?.message}
                 sx={{
                   marginBottom: "20px",
                   '& .MuiOutlinedInput-root': {
@@ -118,7 +118,7 @@ const LoginPage = () => {
             )}
           />
 
-          <Typography variant='body2' sx={{ display: "flex", justifyContent: "end", gap: "5px" }}>  not have an account please ? <Typography sx={{ textDecoration: "none" }} component={"a"} href='/sign_up' variant='body1'>Sign up</Typography> </Typography>
+          <Typography variant='body2' sx={{ display: "flex", justifyContent: "end", gap: "5px" }}>  not have an account please ? <Typography sx={{ textDecoration: "none", color:"blue" }} component={"a"} href='/sign_up' variant='body1'>Sign up</Typography> </Typography>
           <Button variant='contained' type='submit' sx={{ display: "block", margin: "auto", backgroundColor: "#21c45d", color: "#fff" }} > Log in</Button>
         </Box>
 

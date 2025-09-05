@@ -59,7 +59,7 @@ const SignUpPage = () => {
             name='fullName'
             control={control}
             render={({ field }) => (
-              <TextField fullWidth label="Enter full name" variant="outlined" {...field} error={errors.fullName}
+              <TextField autoComplete="off" fullWidth label="Enter full name" variant="outlined" {...field} error={errors.fullName}
                 helperText={errors.fullName?.message}
                 sx={{
                   marginBottom: '20px',
@@ -97,7 +97,7 @@ const SignUpPage = () => {
             name='email'
             control={control}
             render={({ field }) => (
-              <TextField fullWidth label="Enter Email" variant="outlined" type='email'  {...field} error={errors.email}
+              <TextField autoComplete="off" fullWidth label="Enter Email" variant="outlined" type='email'  {...field} error={errors.email}
                 helperText={errors.email?.message}
                 sx={{
                   marginBottom: '20px',
@@ -124,7 +124,7 @@ const SignUpPage = () => {
             )}
           />
 
-          <Typography variant="subtitle1" sx={{ color: 'white', marginBottom: '8px' }}>
+          <Typography  variant="subtitle1" sx={{ color: 'white', marginBottom: '8px' }}>
             Enter Password
           </Typography>
           <Controller
@@ -132,7 +132,7 @@ const SignUpPage = () => {
             control={control}
             render={({ field }) => (
               <TextField  {...field}
-                fullWidth label="Enter your Password" variant='outlined' type='password' error={errors.password}
+                fullWidth autoComplete="off" label="Enter your Password" variant='outlined' type='password' error={errors.password}
                 helperText={errors.password?.message}
                 sx={{
                   marginBottom: "20px",
@@ -196,7 +196,7 @@ const SignUpPage = () => {
 
           />
 
-          <Typography variant='caption' sx={{ display: "flex", justifyContent: "end", gap: "5px" }}> Already have an account? <Typography sx={{ textDecoration: "none" }} component={"a"} href='/login' variant='body2'>Log in</Typography> </Typography>
+          <Typography variant='caption' sx={{ display: "flex", justifyContent: "end", gap: "5px" }}> Already have an account? <Typography sx={{ textDecoration: "none", color:"blue" }} component={"a"} href='/login' variant='body2'>Log in</Typography> </Typography>
 
 
           <Button variant='contained' type='submit' sx={{ display: "block", margin: "auto", backgroundColor: "#21c45d", color: "#fff" }} >Log in</Button>
