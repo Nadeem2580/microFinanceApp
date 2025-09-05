@@ -9,8 +9,8 @@ import Cookies from "js-cookie"
 import { useAppContext } from '../../context/userContext.jsx'
 const schema = yup
   .object({
-    loginEmail: yup.string().required('Email is required').email('Invalid email address'),
-    loginPassword: yup.string().required('Password is required'),
+    email: yup.string().required('Email is required').email('Invalid email address'),
+    password: yup.string().required('Password is required'),
   })
 
 
@@ -20,13 +20,15 @@ const LoginPage = () => {
   const { control, reset, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      loginEmail: "",
-      loginPassword: "",
+      email: "",
+      password: "",
     }
   })
   const loginFunc = async (obj) => {
     try {
+      console.log(obj , "obj")
       const res = await axios.post(`${BASE_URL}/api/auth/login`, obj)
+    
       if (!res.data.status) {
         throw toasterAlert({
           message: res.data.message,
@@ -53,12 +55,12 @@ const LoginPage = () => {
         <Typography variant="subtitle1" sx={{ color: 'white', marginBottom: '8px' }}>
           Enter Email
         </Typography>
-        <Box component={"form"} onSubmit={handleSubmit(loginFunc)} autoComplete="off">
+        <Box component={"form"} onSubmit={handleSubmit(loginFunc)} >
           <Controller
-            name='loginEmail'
+            name='email'
             control={control}
             render={({ field }) => (
-              <TextField fullWidth label="Enter Email" autoComplete="off" variant="outlined" {...field} error={errors.loginEmail} helperText={errors?.loginEmail?.message}
+              <TextField fullWidth label="Enter Email" autoComplete="off" variant="outlined" {...field} error={errors.email} helperText={errors?.email?.message}
                 sx={{
                   marginBottom: '20px', '& .MuiOutlinedInput-root': {
                     backgroundColor: '#101319',
@@ -87,11 +89,11 @@ const LoginPage = () => {
             Enter Password
           </Typography>
           <Controller
-            name='loginPassword'
+            name='password'
             control={control}
             render={({ field }) => (
               <TextField {...field}
-                fullWidth label="Enter your Password" variant='outlined' autoComplete="off" type='password' error={errors.loginPassword} helperText={errors?.loginPassword?.message}
+                fullWidth label="Enter your Password" variant='outlined' autoComplete="off" type='password' error={errors.password} helperText={errors?.password?.message}
                 sx={{
                   marginBottom: "20px",
                   '& .MuiOutlinedInput-root': {

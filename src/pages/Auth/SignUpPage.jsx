@@ -10,9 +10,9 @@ import { useAppContext } from '../../context/userContext'
 const schema = yup
   .object({
     fullName: yup.string().required('Full name is required'),
-    signUpemail: yup.string().required('Email is required').email('Invalid email address'),
-    signUpPassword: yup.string().required('Password is required'),
-    confirmPassword: yup.string().required('Confirm Password is required').oneOf([yup.ref('signUpPassword'), null], 'Passwords must match'),
+    email: yup.string().required('Email is required').email('Invalid email address'),
+    password: yup.string().required('Password is required'),
+    confirmPassword: yup.string().required('Confirm Password is required').oneOf([yup.ref('password'), null], 'Passwords must match'),
 
   })
 
@@ -24,15 +24,14 @@ const SignUpPage = () => {
     defaultValues: {
       fullName: "",
       email: "",
-      signUpPassword: "",
+      password: "",
       confirmPassword: "",
     }
   })
   const signUpFunc = async (obj) => {
     try {
-      const { fullName, email, password, confirmPassword } = obj
 
-      const response = await axios.post(`${BASE_URL}/api/auth/signup`, obj)
+       await axios.post(`${BASE_URL}/api/auth/signup`, obj)
 
       toasterAlert({
         message: "User created successfully",
@@ -94,11 +93,11 @@ const SignUpPage = () => {
             Enter Email
           </Typography>
           <Controller
-            name='signUpemail'
+            name='email'
             control={control}
             render={({ field }) => (
-              <TextField autoComplete="off" fullWidth label="Enter Email" variant="outlined" type='email'  {...field} error={errors.signUpemail}
-                helperText={errors.signUpemail?.message}
+              <TextField autoComplete="off" fullWidth label="Enter Email" variant="outlined" type='email'  {...field} error={errors.email}
+                helperText={errors.email?.message}
                 sx={{
                   marginBottom: '20px',
                   '& .MuiOutlinedInput-root': {
@@ -128,12 +127,12 @@ const SignUpPage = () => {
             Enter Password
           </Typography>
           <Controller
-            name='signUpPassword'
+            name='password'
             control={control}
             render={({ field }) => (
               <TextField  {...field}
-                fullWidth autoComplete="off" label="Enter your Password" variant='outlined' type='password' error={errors.signUpPassword}
-                helperText={errors.signUpPassword?.message}
+                fullWidth autoComplete="off" label="Enter your Password" variant='outlined' type='password' error={errors.password}
+                helperText={errors.password?.message}
                 sx={{
                   marginBottom: "20px",
                   '& .MuiOutlinedInput-root': {

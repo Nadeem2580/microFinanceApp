@@ -14,7 +14,8 @@ import {
   Menu as MenuIcon,
   PersonOutline as PersonOutlineIcon
 } from '@mui/icons-material';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Cookie from "js-cookie";
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
@@ -26,8 +27,20 @@ const navlinks = [
 
 const Navbar = ({ children }) => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  useEffect(() => {
+    const token = Cookie.get("token");
+    setIsLoggedIn(!!token);
+  }, []);
+
+  const handleLogout = () => {
+    Cookie.remove("token");
+    setIsLoggedIn(false);
+    window.location.href = "/login"; // or use navigate
+  };
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -39,57 +52,36 @@ const Navbar = ({ children }) => {
 
   return (
     <>
-      <AppBar position="fixed" sx={{ background: "#101319", py: { xs: 0.5, md: 0 } }}>
+      <AppBar position="fixed" sx={{ background: "#101319" }}>
         <Container maxWidth="xl">
-          <Toolbar disableGutters sx={{
-            justifyContent: 'space-between',
-            gap: { xs: 1, md: 0 }
-          }}>
-            {/* Logo Section - Left */}
-            <Box sx={{
-              flexGrow: { xs: 1, md: 0 },
-              minWidth: { xs: 'auto', md: '200px' }
-            }}>
-              <Stack direction="row" alignItems="center" spacing={1}>
-                <Box sx={{
-                  background: "#1fb857",
-                  fontSize: { xs: "16px", md: "20px" },
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: { xs: "8px 12px", md: "10px 15px" },
-                  borderRadius: "13px",
-                  aspectRatio: "1/1"
-                }}>
-                  Q
-                </Box>
-                <Box>
-                  <Typography sx={{
-                    fontWeight: 700,
-                    fontSize: { xs: "0.9rem", sm: "1rem", md: "1.1rem" },
-                    lineHeight: 1.2
-                  }}>
-                    Qarze Hasana Hub
-                  </Typography>
-                  <Typography variant='caption' sx={{
-                    fontSize: { xs: "0.65rem", sm: "0.75rem" },
-                    display: { xs: "none", sm: "block" }
-                  }}>
-                    Saylani Microfinance
-                  </Typography>
-                </Box>
-              </Stack>
-            </Box>
-
-            {/* Navigation Links - Center */}
-            {!isMobile && (
+          <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
+            {/* Logo Section */}
+            <Stack direction="row" alignItems="center" spacing={1}>
               <Box sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                gap: { md: 2, lg: 4 },
-                flexGrow: 1,
-                px: 2
+                background: "#1fb857",
+                fontSize: "20px",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "10px 15px",
+                borderRadius: "13px",
+                aspectRatio: "1/1"
               }}>
+                Q
+              </Box>
+              <Box>
+                <Typography sx={{ fontWeight: 700, fontSize: "1.1rem", lineHeight: 1.2 }}>
+                  Qarze Hasana Hub
+                </Typography>
+                <Typography variant='caption'>
+                  Saylani Microfinance
+                </Typography>
+              </Box>
+            </Stack>
+
+            {/* Desktop Nav Links */}
+            {!isMobile && (
+              <Box sx={{ display: 'flex', gap: 4 }}>
                 {navlinks.map((item) => (
                   <Button
                     key={item.title}
@@ -98,8 +90,7 @@ const Navbar = ({ children }) => {
                       color: '#fff',
                       textTransform: 'none',
                       fontWeight: 500,
-                      fontSize: { md: "0.9rem", lg: "1rem" },
-                      px: { md: 1, lg: 2 },
+                      fontSize: "1rem",
                       '&:hover': {
                         color: '#1fb857',
                         backgroundColor: 'transparent'
@@ -112,161 +103,135 @@ const Navbar = ({ children }) => {
               </Box>
             )}
 
-            {/* Action Buttons - Right */}
-            <Box sx={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              gap: { xs: 1, sm: 2 },
-              flexGrow: { xs: 0, md: 0 },
-              minWidth: { xs: 'auto', md: '200px' }
-            }}>
-              {!isMobile ? (
-                <>
-                  <Button
-                    component="a"
-                    href="/login"
-                    sx={{
-                      color: "#fff",
-                      display: "flex",
-                      alignItems: "center",
-                      textTransform: 'none',
-                      fontSize: { md: "0.9rem", lg: "1rem" },
-                      px: { md: 1, lg: 2 },
-                      "&:hover": {
-                        backgroundColor: "rgba(255, 165, 0, 0.1)",
-                        color: "orange"
-                      }
-                    }}
-                  >
-                    <PersonOutlineIcon fontSize="small" sx={{ mr: 1 }} /> Login
-                  </Button>
-                  <Button
-                    component="a"
-                    href='/applying_loan'
-                    sx={{
-                      backgroundColor: "#1fb857",
-                      padding: { md: "6px 16px", lg: "8px 20px" },
-                      color: "#fff",
-                      textTransform: 'none',
-                      fontSize: { md: "0.9rem", lg: "1rem" },
-                      "&:hover": {
-                        backgroundColor: "#18a048"
-                      },
-                      whiteSpace: 'nowrap'
-                    }}
-                  >
-                    Apply now
-                  </Button>
-                </>
-              ) : (
-                <IconButton
-                  size="large"
-                  edge="end"
-                  color="inherit"
-                  aria-label="menu"
-                  onClick={handleMenuOpen}
-                  sx={{ p: 1 }}
-                >
-                  <MenuIcon fontSize={isMobile ? "medium" : "large"} />
-                </IconButton>
-              )}
-            </Box>
-
-            {/* Mobile Menu */}
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleMenuClose}
-              PaperProps={{
-                sx: {
-                  backgroundColor: '#11141a',
-                  color: '#fff',
-                  width: '100%',
-                  maxWidth: '100vw',
-                  mt: 0.5
-                }
-              }}
-              MenuListProps={{
-                sx: {
-                  py: 0
-                }
-              }}
-            >
-              {navlinks.map((item) => (
-                <MenuItem
-                  key={item.title}
-                  onClick={handleMenuClose}
-                  component="a"
-                  href={item.path}
+            {/* Right Side: Login/Logout OR Menu Icon */}
+            {isMobile ? (
+              <IconButton
+                size="large"
+                edge="end"
+                color="inherit"
+                onClick={handleMenuOpen}
+              >
+                <MenuIcon />
+              </IconButton>
+            ) : (
+              isLoggedIn ? (
+                <Button
+                  onClick={handleLogout}
                   sx={{
-                    py: 2,
-                    borderBottom: '1px solid rgba(255,255,255,0.1)',
-                    padding:"50px",
+                    color: "#fff",
+                    textTransform: 'none',
+                    fontSize: "1rem",
                     '&:hover': {
-                      backgroundColor: '#1fb857'
+                      backgroundColor: "#ff0000",
+                      color: "#fff"
                     }
                   }}
                 >
-                  <Typography sx={{
-                    fontSize: '1rem',
-                    fontWeight: 500
-                  }}>
-                    {item.title}
-                  </Typography>
-                </MenuItem>
-              ))}
-              <Box sx={{
-                display: 'flex',
-                gap: 2,
-                p: 2,
-                flexDirection: { xs: 'column', sm: 'row' }
-              }}>
+                  Logout
+                </Button>
+              ) : (
                 <Button
-                  fullWidth
                   href="/login"
                   sx={{
                     color: "#fff",
                     display: "flex",
                     alignItems: "center",
                     textTransform: 'none',
-                    border: '1px solid #fff',
-                    fontSize: '0.9rem',
-                    py: 1.5,
-                    "&:hover": {
-                      backgroundColor: "orange",
-                      color: "#fff"
+                    fontSize: "1rem",
+                    '&:hover': {
+                      color: "orange"
                     }
                   }}
                 >
-                  <PersonOutlineIcon fontSize="small" sx={{ mr: 1 }} /> Login
+                  <PersonOutlineIcon fontSize="small" sx={{ mr: 1 }} />
+                  Login
                 </Button>
-                <Button
-                  fullWidth
-                  href='/applying_loan'
-                  sx={{
-                    backgroundColor: "#1fb857",
-                    color: "#fff",
-                    textTransform: 'none',
-                    fontSize: '0.9rem',
-                    py: 1.5,
-                    "&:hover": {
-                      backgroundColor: "#18a048"
-                    }
-                  }}
-                >
-                  Apply now
-                </Button>
-              </Box>
-            </Menu>
+              )
+            )}
           </Toolbar>
         </Container>
       </AppBar>
 
-      <Box>
+      {/* Mobile Menu Drawer */}
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleMenuClose}
+        PaperProps={{
+          sx: {
+            backgroundColor: '#11141a',
+            color: '#fff',
+            width: '100%',
+            maxWidth: '100vw',
+            mt: 0.5
+          }
+        }}
+      >
+        {navlinks.map((item) => (
+          <MenuItem
+            key={item.title}
+            onClick={handleMenuClose}
+            component="a"
+            href={item.path}
+            sx={{
+              py: 2,
+              borderBottom: '1px solid rgba(255,255,255,0.1)',
+              '&:hover': {
+                backgroundColor: '#1fb857'
+              }
+            }}
+          >
+            <Typography sx={{ fontSize: '1rem', fontWeight: 500 }}>
+              {item.title}
+            </Typography>
+          </MenuItem>
+        ))}
+        <Box sx={{ p: 2 }}>
+          {isLoggedIn ? (
+            <Button
+              fullWidth
+              onClick={() => {
+                handleLogout();
+                handleMenuClose();
+              }}
+              sx={{
+                backgroundColor: "#ff0000",
+                color: "#fff",
+                textTransform: 'none',
+                '&:hover': {
+                  backgroundColor: "#cc0000"
+                }
+              }}
+            >
+              Logout
+            </Button>
+          ) : (
+            <Button
+              fullWidth
+              href="/login"
+              onClick={handleMenuClose}
+              sx={{
+                color: "#fff",
+                border: '1px solid #fff',
+                textTransform: 'none',
+                '&:hover': {
+                  backgroundColor: "orange",
+                  color: "#fff"
+                }
+              }}
+            >
+              <PersonOutlineIcon fontSize="small" sx={{ mr: 1 }} />
+              Login
+            </Button>
+          )}
+        </Box>
+      </Menu>
+
+      {/* Children content below navbar */}
+      <Box mt={10}>
         {children}
       </Box>
     </>
-
   );
 };
 
