@@ -53,7 +53,7 @@ const LoginPage = () => {
         <Typography variant="subtitle1" sx={{ color: 'white', marginBottom: '8px' }}>
           Enter Email
         </Typography>
-        <Box component={"form"} onSubmit={handleSubmit(loginFunc)}>
+        <Box component={"form"} onSubmit={handleSubmit(loginFunc)} autoComplete="off">
           <Controller
             name='email'
             control={control}
