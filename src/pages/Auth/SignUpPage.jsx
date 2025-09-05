@@ -12,7 +12,7 @@ const schema = yup
     fullName: yup.string().required('Full name is required'),
     signUpemail: yup.string().required('Email is required').email('Invalid email address'),
     signUpPassword: yup.string().required('Password is required'),
-    confirmPassword: yup.string().required('Confirm Password is required').oneOf([yup.ref('password'), null], 'Passwords must match'),
+    confirmPassword: yup.string().required('Confirm Password is required').oneOf([yup.ref('signUpPassword'), null], 'Passwords must match'),
 
   })
 
