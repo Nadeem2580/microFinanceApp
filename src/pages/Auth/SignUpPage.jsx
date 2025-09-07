@@ -198,7 +198,7 @@ const SignUpPage = () => {
           <Typography variant='caption' sx={{ display: "flex", justifyContent: "end", gap: "5px" }}> Already have an account? <Typography sx={{ textDecoration: "none", color: "blue" }} component={"a"} href='/login' variant='body2'>Log in</Typography> </Typography>
 
 
-          <Button variant='contained' type='submit' sx={{ display: "block", margin: "auto", backgroundColor: "#21c45d", color: "#fff" }} >Log in</Button>
+          <Button variant='contained' type='submit' sx={{ display: "block", margin: "auto", backgroundColor: "#21c45d", color: "#fff" }} >Sign up</Button>
         </Box>
 
       </Box>
