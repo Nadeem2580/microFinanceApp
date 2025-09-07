@@ -34,7 +34,7 @@ import * as yup from "yup";
 import BASE_URL from '../../utils/utils';
 import Cookies from "js-cookie"
 import LoanDetailsModal from '../../component/Modal';
-import {replace, useNavigate} from "react-router-dom"
+import { replace, useNavigate } from "react-router-dom"
 
 const loanCategories = {
   wedding: {
@@ -89,7 +89,7 @@ const formSchema = yup.object({
 
 const LoanApply = () => {
   const theme = useTheme();
-  const  navigate = useNavigate()
+  const navigate = useNavigate()
   const [selectedCategory, setSelectedCategory] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
@@ -130,7 +130,7 @@ const LoanApply = () => {
 
   const closemodal = () => {
     setOpen(false)
-    navigate("/", {replace:true})
+    navigate("/", { replace: true })
 
   }
   const onSubmit = async (data) => {
@@ -221,6 +221,7 @@ const LoanApply = () => {
                     render={({ field }) => (
                       <TextField
                         {...field}
+                        autoComplete='off'
                         label="Full Name *"
                         fullWidth
                         error={!!errors.fullName}
@@ -237,6 +238,7 @@ const LoanApply = () => {
                         {...field}
                         label="CNIC *"
                         fullWidth
+                        autoComplete='off'
                         placeholder="12345-1234567-1"
                         error={!!errors.cnic}
                         helperText={errors.cnic?.message}
@@ -252,6 +254,7 @@ const LoanApply = () => {
                         {...field}
                         label="Email Address *"
                         fullWidth
+                        autoComplete='off'
                         type="email"
                         error={!!errors.email}
                         helperText={errors.email?.message}
@@ -267,6 +270,7 @@ const LoanApply = () => {
                         {...field}
                         label="Phone Number *"
                         fullWidth
+                        autoComplete='off'
                         error={!!errors.phoneNumber}
                         helperText={errors.phoneNumber?.message}
                       />
@@ -281,6 +285,7 @@ const LoanApply = () => {
                         {...field}
                         label="Address *"
                         fullWidth
+                        autoComplete='off'
                         multiline
                         rows={2}
                         error={!!errors.address}
@@ -298,6 +303,7 @@ const LoanApply = () => {
                         {...field}
                         label="City *"
                         fullWidth
+                        autoComplete='off'
                         error={!!errors.city}
                         helperText={errors.city?.message}
                       />
@@ -333,6 +339,7 @@ const LoanApply = () => {
                         <Select
                           {...field}
                           label="Category *"
+                          autoComplete='off'
                           onChange={(e) => {
                             field.onChange(e);
                             setSelectedCategory(e.target.value);
@@ -388,12 +395,9 @@ const LoanApply = () => {
                         label="Loan Amount (PKR) *"
                         fullWidth
                         type="number"
+                        autoComplete='off'
                         InputProps={{
                           startAdornment: <InputAdornment position="start">PKR</InputAdornment>,
-                          inputProps: {
-                            min: 0,
-                            max: selectedCategory ? loanCategories[selectedCategory]?.maxAmount : undefined
-                          }
                         }}
                         error={!!errors.loanAmount}
                         helperText={errors.loanAmount?.message}
@@ -409,6 +413,7 @@ const LoanApply = () => {
                         {...field}
                         label="Initial Deposit (PKR)"
                         fullWidth
+                        autoComplete='off'
                         type="number"
                         InputProps={{
                           startAdornment: <InputAdornment position="start">PKR</InputAdornment>,
@@ -428,6 +433,7 @@ const LoanApply = () => {
                         {...field}
                         label="Loan Period (Years) *"
                         fullWidth
+                        autoComplete='off'
                         type="number"
                         InputProps={{
                           inputProps: { min: 1 }
@@ -446,6 +452,7 @@ const LoanApply = () => {
                         {...field}
                         label="Monthly Income (PKR) *"
                         fullWidth
+                        autoComplete='off'
                         type="number"
                         InputProps={{
                           startAdornment: <InputAdornment position="start">PKR</InputAdornment>,
@@ -488,6 +495,7 @@ const LoanApply = () => {
                         label="Purpose of Loan *"
                         fullWidth
                         multiline
+                        autoComplete='off'
                         rows={3}
                         error={!!errors.purposeOfLoan}
                         helperText={errors.purposeOfLoan?.message}
@@ -528,6 +536,7 @@ const LoanApply = () => {
                           {...field}
                           label="Name *"
                           fullWidth
+                          autoComplete='off'
                           error={!!errors.guarantor1FullName}
                           helperText={errors.guarantor1FullName?.message}
                         />
@@ -543,6 +552,7 @@ const LoanApply = () => {
                           label="Email *"
                           fullWidth
                           type="email"
+                          autoComplete='off'
                           error={!!errors.guarantor1Email}
                           helperText={errors.guarantor1Email?.message}
                         />
@@ -557,6 +567,7 @@ const LoanApply = () => {
                           {...field}
                           label="CNIC *"
                           fullWidth
+                          autoComplete='off'
                           error={!!errors.guarantor1Cnic}
                           helperText={errors.guarantor1Cnic?.message}
                         />
@@ -571,6 +582,7 @@ const LoanApply = () => {
                           {...field}
                           label="Location *"
                           fullWidth
+                          autoComplete='off'
                           error={!!errors.guarantor1Location}
                           helperText={errors.guarantor1Location?.message}
                         />
@@ -595,6 +607,7 @@ const LoanApply = () => {
                           {...field}
                           label="Name *"
                           fullWidth
+                          autoComplete='off'
                           error={!!errors.guarantor2FullName}
                           helperText={errors.guarantor2FullName?.message}
                         />
@@ -610,6 +623,7 @@ const LoanApply = () => {
                           label="Email *"
                           fullWidth
                           type="email"
+                          autoComplete='off'
                           error={!!errors.guarantor2Email}
                           helperText={errors.guarantor2Email?.message}
                         />
@@ -624,6 +638,7 @@ const LoanApply = () => {
                           {...field}
                           label="CNIC *"
                           fullWidth
+                          autoComplete='off'
                           error={!!errors.guarantor2Cnic}
                           helperText={errors.guarantor2Cnic?.message}
                         />
@@ -638,6 +653,7 @@ const LoanApply = () => {
                           {...field}
                           label="Location *"
                           fullWidth
+                          autoComplete='off'
                           error={!!errors.guarantor2Location}
                           helperText={errors.guarantor2Location?.message}
                         />
@@ -663,7 +679,7 @@ const LoanApply = () => {
         </Card>
 
         {/* Contact Information */}
-       
+
       </Box>
 
 
