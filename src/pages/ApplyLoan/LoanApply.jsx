@@ -34,7 +34,7 @@ import * as yup from "yup";
 import BASE_URL from '../../utils/utils';
 import Cookies from "js-cookie"
 import LoanDetailsModal from '../../component/Modal';
-
+import {replace, useNavigate} from "react-router-dom"
 
 const loanCategories = {
   wedding: {
@@ -62,7 +62,6 @@ const loanCategories = {
     period: 4
   }
 };
-
 const formSchema = yup.object({
   fullName: yup.string().required("Full name is required"),
   email: yup.string().email("Invalid email").required("Email is required"),
@@ -72,7 +71,7 @@ const formSchema = yup.object({
   city: yup.string().required("City is required"),
   loanCategory: yup.string().required("Loan category is required"),
   loanSubCategory: yup.string().required("Loan subcategory is required"),
-  loanAmount: yup.number().positive("Amount must be positive").required("Loan amount is required"),
+  loanAmount: yup.number().required("Loan amount is required"),
   initalDeposite: yup.number().min(0, "Deposit can't be negative"),
   loanPeriod: yup.number().positive("Period must be positive").required("Loan period is required"),
   monthlyIncome: yup.number().positive("Income must be positive").required("Monthly income is required"),
@@ -90,10 +89,10 @@ const formSchema = yup.object({
 
 const LoanApply = () => {
   const theme = useTheme();
+  const  navigate = useNavigate()
   const [selectedCategory, setSelectedCategory] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
-
   const { control, handleSubmit, formState: { errors }, watch, setValue, reset } = useForm({
     resolver: yupResolver(formSchema),
     defaultValues: {
@@ -131,6 +130,7 @@ const LoanApply = () => {
 
   const closemodal = () => {
     setOpen(false)
+    navigate("/", {replace:true})
 
   }
   const onSubmit = async (data) => {

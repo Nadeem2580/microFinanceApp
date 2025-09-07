@@ -18,7 +18,7 @@ import { useState, useEffect } from 'react';
 import Cookie from "js-cookie";
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-
+import { useNavigate } from "react-router";
 const navlinks = [
   { title: 'Home', path: '/' },
   { title: 'Apply for loan', path: '/applying_loan' },
@@ -30,7 +30,7 @@ const Navbar = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-
+const navigate = useNavigate()
   useEffect(() => {
     const token = Cookie.get("token");
     setIsLoggedIn(!!token);
@@ -39,7 +39,7 @@ const Navbar = ({ children }) => {
   const handleLogout = () => {
     Cookie.remove("token");
     setIsLoggedIn(false);
-    window.location.href = "/login"; // or use navigate
+    navigate('/',{replace:true}) // or use navigate
   };
 
   const handleMenuOpen = (event) => {
