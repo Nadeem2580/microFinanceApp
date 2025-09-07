@@ -26,7 +26,7 @@ const Footer = () => {
 
         <Typography sx={{color:"#6197b3",fontSize:"2vmin", textAlign:"center"}} >Empowering communities through interest-free Islamic</Typography>
         <Typography sx={{color:"#6197b3",fontSize:"2vmin", textAlign:"center"}} >financing. Building dreams, supporting families, creating opportunities.</Typography>
-        <Typography sx={{color:"#6197b3",fontSize:"2vmin", textAlign:"center"}} >© 2024 Saylani Welfare. All rights reserved. | Shariah Compliant Financing</Typography>
+        <Typography sx={{color:"#6197b3",fontSize:"2vmin", textAlign:"center"}} >© 2024. All rights reserved. | Shariah Compliant Financing</Typography>
 
 
       </Box>

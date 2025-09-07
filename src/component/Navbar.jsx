@@ -74,7 +74,7 @@ const Navbar = ({ children }) => {
                   Qarze Hasana Hub
                 </Typography>
                 <Typography variant='caption'>
-                  Saylani Microfinance
+                   Microfinance
                 </Typography>
               </Box>
             </Stack>

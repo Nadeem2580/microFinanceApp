@@ -38,12 +38,12 @@ const Contact = () => {
                         <Box>
                             <MailIcon color="primary" sx={{ fontSize: 32, mb: 1 }} />
                             <Typography variant="subtitle1" sx={{ fontWeight: 'medium' }}>Email</Typography>
-                            <Typography color="text.secondary">info@saylani.org</Typography>
+                            <Typography color="text.secondary">info@qarzahasana.org</Typography>
                         </Box>
                         <Box>
                             <MapPinIcon color="primary" sx={{ fontSize: 32, mb: 1 }} />
                             <Typography variant="subtitle1" sx={{ fontWeight: 'medium' }}>Office</Typography>
-                            <Typography color="text.secondary">Saylani House, Karachi</Typography>
+                            <Typography color="text.secondary">Qarza Hasana House, Karachi</Typography>
                         </Box>
                     </Box>
                 </CardContent>
